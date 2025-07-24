@@ -25,11 +25,9 @@ Telecom-Sales-Dashboard/
 │   ├── procedures.sql
 │   └── sequence_trigger.sql
 ├── screenshots/
-│   ├── dashboard_revenue.png
-│   ├── sales_by_category.png
-│   ├── customer_activity.png
-│   ├── returns_analysis.png
-│   └── employee_performance.png
+│   ├── overview.png
+│   ├── product_and_store.png
+│   ├── customer_and_employees.png
 ├── LICENSE
 └── README.md
 ```
