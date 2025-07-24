@@ -1,0 +1,87 @@
+DROP TABLE Stores CASCADE CONSTRAINTS;
+DROP TABLE Products CASCADE CONSTRAINTS;
+DROP TABLE Customers CASCADE CONSTRAINTS;
+DROP TABLE Employees CASCADE CONSTRAINTS;
+DROP TABLE Orders CASCADE CONSTRAINTS;
+DROP TABLE Order_Items CASCADE CONSTRAINTS;
+
+
+
+-- 1. Stores Table
+CREATE TABLE Stores (
+    StoreID INT PRIMARY KEY,
+    StoreName VARCHAR(100) NOT NULL,
+    Address VARCHAR(255) NOT NULL,
+    City VARCHAR(50) NOT NULL,
+    Phone VARCHAR(20),
+    OpeningHours VARCHAR(50)
+);
+
+
+-- 2. Products Table
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100) NOT NULL,
+    Category VARCHAR(50) NOT NULL,          -- e.g., Smartphone, Laptop, Accessory
+    Brand VARCHAR(50) NOT NULL,             -- e.g., Samsung, Apple, Xiaomi
+    Price DECIMAL(10, 2) NOT NULL,
+    StockQuantity INT NOT NULL,
+    StoreID INT,
+    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID)
+);
+
+
+-- 3. Customers Table
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Email VARCHAR(100),
+    Address VARCHAR(255)
+);
+
+
+-- 4. Employees Table
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Position VARCHAR(50) NOT NULL, -- e.g., Sales Rep, Manager
+    StoreID INT,
+    HireDate DATE,
+    Phone VARCHAR(20),
+    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID)
+);
+
+
+
+-- 5. Orders table
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    StoreID INT,
+    EmployeeID INT,                                                     -- Column for employee relation
+    OrderDate DATE NOT NULL,                                            -- Oracle uses DATE instead of DATETIME
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    PaymentMethod VARCHAR2(50),                                         -- VARCHAR2 is Oracle's standard string type
+    OrderType VARCHAR2(10) NOT NULL,                                    -- Fixed: Added data type, assuming "Online" or "In-Store"
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (StoreID) REFERENCES Stores(StoreID),
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID),
+    CONSTRAINT chk_ordertype CHECK (OrderType IN ('Online', 'In-Store')) -- Optional: Restricts values
+);
+
+
+
+-- 6. Order_Items table
+CREATE TABLE Order_Items (
+    OrderItemID INT PRIMARY KEY,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT NOT NULL,
+    UnitPrice DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
